@@ -343,3 +343,10 @@ class LGTVRemote(WebSocketClient):
 
     def getPictureSettings(self, keys=["contrast", "backlight", "brightness", "color"]):
         self.__send_command("request", "ssap://settings/getSystemSettings", {"category": "picture", "keys": keys})
+
+    def setDeviceInfo(self, input_id, label, callback=None):
+        icon_map = {
+            "PC": "pc",
+            "HDMI": "hdmigeneric",
+        }
+        self.__send_command("request", "luna://com.webos.service.eim/setDeviceInfo", {"id": input_id, "label": label, "icon": f"{icon_map[label]}.png"}, callback)
