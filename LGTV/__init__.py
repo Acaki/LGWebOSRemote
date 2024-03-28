@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
+
+import socket
 from inspect import getfullargspec
 
 import json
@@ -9,10 +11,12 @@ from time import sleep
 import logging
 import argparse
 
-from .scan import LGTVScan
-from .remote import LGTVRemote
-from .auth import LGTVAuth
-from .cursor import LGTVCursor
+import socks
+
+from LGTV.scan import LGTVScan
+from LGTV.remote import LGTVRemote
+from LGTV.auth import LGTVAuth
+from LGTV.cursor import LGTVCursor
 
 
 search_config = [
@@ -111,6 +115,10 @@ def main():
                 config = json.loads(f.read())
         except:
             pass
+
+    if config.get("proxy"):
+        socks.set_default_proxy(socks.SOCKS5, config["proxy"]["ip"], config["proxy"]["port"])
+        socket.socket = socks.socksocket
 
     if args.command == "scan":
         results = LGTVScan()
